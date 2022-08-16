@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { ToDoList } from "./components/ToDo/ToDoList";
+import "./App.css";
 
-function App() {
+export const App = () => {
+  const [ToDo, setToDo] = useState([]);
+  const [checkbox, setCheckbox] = useState(true);
+  const [input, setInput] = useState("");
+
+  const handleAddInput = () => {
+    setToDo();
+  };
+
+  const handleCheckbox = () => {};
+
+  const handleChangeInput = (evt) => {
+    // console.log(evt.target.value);
+    setToDo(evt.target.value);
+  };
+
+  const handleDeleteBtn = (evt) => {
+    setToDo(evt.target.delete);
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ToDoList ToDoList={ToDoList} />;
+      <ToDo ToDo={ToDo} />
     </div>
   );
-}
-
-export default App;
+};
