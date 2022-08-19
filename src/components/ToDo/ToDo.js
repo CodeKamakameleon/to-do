@@ -1,12 +1,24 @@
-export const ToDo = () => (
-  <form>
+import React from "react";
+
+export function ToDo({ toDo, handleDelete, handleEdit }) {
+  function handleToDoClick() {
+    //change ToDo  (destructure), call handle edit, pass new ToDo with true or false
+    const edited = toDo.key;
+
+    // handleEdit = { handleEdit };
+  }
+
+  return (
     <div>
-      <h1>To-Do List</h1>
-      <input type={"checkbox"}></input>
-      <input type={"text"}></input>
-      <button type="delete" className="">
-        x
-      </button>
+      <label>
+        <input type="checkbox" checked={toDo.complete} />
+        {toDo.name}
+
+        {/* Edit button? */}
+        <button onClick={handleEdit} className="edit">
+          Edit
+        </button>
+      </label>
     </div>
-  </form>
-);
+  );
+}
