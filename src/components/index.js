@@ -4,6 +4,7 @@ import { App } from "../App";
 
 export { ToDoList } from "./ToDo/ToDoList";
 export { ToDo } from "./ToDo/ToDo";
+export { HandleToDoClick } from "./ToDo/HandleToDoClick";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
