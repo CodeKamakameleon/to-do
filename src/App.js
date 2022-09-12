@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
-// import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 import { ToDoList } from "./components/ToDo/ToDoList";
 
 const BASE_URL = "http://jsonplaceholder.typicode.com/todos";
@@ -10,57 +10,57 @@ export const App = () => {
   const [toDos, setToDos] = useState([]);
   const inputRef = useRef();
 
-  const [endpoint, setEndpoint] = useState(URL);
+  // const [endpoint, setEndpoint] = useState(URL);
 
   useEffect(() => {
-    fetch(endpoint)
+    fetch("http://jsonplaceholder.typicode.com/todos")
       .then((res) => res.json())
       .then((data) => setToDos(data));
-  }, [endpoint]);
-
-  //Add To Do input API
-  const handleAddInput = (evt) => {
-    evt.preventDefault();
-    const name = inputRef.current.value;
-    if (name === "") return;
-    setEndpoint(BASE_URL);
-    inputRef.current.value = "";
-
-    if (!toDos) return "No tasks?";
-  };
+  }, []);
 
   // Add To Do input
-  // const handleAddInput = (evt) => {
-  //   evt.preventDefault();
-  //   const name = inputRef.current.value;
-  //   if (name === "") return;
-  //   setToDos((toDo) => {
-  //     return [...toDo, { id: uuidv4(), name, complete: false }];
-  //   });
-  //   inputRef.current.value = "";
-  // };
+  const handleAddInput = (evt) => {
+    fetch("http://jsonplaceholder.typicode.com/todos", {
+      method: "POST",
+      body: JSON.stringify({
+        userId: "",
+        title: "",
+        completed: "",
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json));
+
+    evt.preventDefault();
+    const title = inputRef.current.value;
+    if (title === "") return;
+    setToDos((toDo) => {
+      return [...toDo, { id: uuidv4(), title, completed: false }];
+    });
+    inputRef.current.value = "";
+  };
 
   // toggle to complete
-  // const toggleToDo = (id) => {
-  //   setToDos((t) =>
-  //     t.map((toDoItem) => {
-  //       if (toDoItem.id !== id) return toDoItem;
-  //       return {
-  //         ...toDoItem,
-  //         complete: !toDoItem.complete,
-  //       };
-  //     })
-  //   );
-  // };
-
-  //Toggle to complete API
   const toggleToDo = (id) => {
-    setEndpoint((t) =>
+    //this wil be a PUT
+
+    fetch("http://jsonplaceholder.typicode.com/todos{id}", {
+      method: "PUT",
+      body: JSON.stringify({
+        userId: "",
+        title: "",
+        completed: "",
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json));
+
+    setToDos((t) =>
       t.map((toDoItem) => {
         if (toDoItem.id !== id) return toDoItem;
         return {
           ...toDoItem,
-          complete: !toDoItem.complete,
+          completed: !toDoItem.completed,
         };
       })
     );
@@ -68,22 +68,39 @@ export const App = () => {
 
   // Clear all complete toDos
   function handleClear() {
-    const newToDos = toDos.filter((toDo) => !toDo.complete);
+    const newToDos = toDos.filter((toDo) => !toDo.completed);
     setToDos(newToDos);
   }
 
   // Delete individual toDos
   const handleDelete = (id) => {
+    // API use a delete method here
+    fetch("http://jsonplaceholder.typicode.com/todos{id}", {
+      method: "DELETE",
+    });
+
     setToDos((toDoList) => toDoList.filter((toDo) => toDo.id !== id));
   };
 
   //
-  const handleUpdate = (id, name) => {
+  const handleUpdate = (id, title) => {
+    // PUT method here
+    fetch("http://jsonplaceholder.typicode.com/todos{id}", {
+      method: "PUT",
+      body: JSON.stringify({
+        userId: "",
+        title: "",
+        completed: "",
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json));
+
     setToDos((toDoList) =>
       toDoList.map((toDoItem) => {
         if (toDoItem.id !== id) return toDoItem;
 
-        return { ...toDoItem, name };
+        return { ...toDoItem, title };
       })
     );
   };
