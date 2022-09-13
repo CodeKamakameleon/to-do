@@ -3,8 +3,8 @@ import { useState, useRef, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ToDoList } from "./components/ToDo/ToDoList";
 
-const BASE_URL = "http://jsonplaceholder.typicode.com/todos";
-const URL = `${BASE_URL}/{id}`;
+// const BASE_URL = "http://jsonplaceholder.typicode.com/todos";
+// const URL = `${BASE_URL}/todos${id}`;
 
 export const App = () => {
   const [toDos, setToDos] = useState([]);
@@ -29,14 +29,18 @@ export const App = () => {
       }),
     })
       .then((res) => res.json())
-      .then((json) => console.log(json));
+      .then(
+        (json) => console.log(json),
+
+        setToDos((toDo) => {
+          return [...toDo, { id: uuidv4(), title, completed: false }];
+        })
+      );
 
     evt.preventDefault();
     const title = inputRef.current.value;
     if (title === "") return;
-    setToDos((toDo) => {
-      return [...toDo, { id: uuidv4(), title, completed: false }];
-    });
+
     inputRef.current.value = "";
   };
 
@@ -44,7 +48,7 @@ export const App = () => {
   const toggleToDo = (id) => {
     //this wil be a PUT
 
-    fetch("http://jsonplaceholder.typicode.com/todos{id}", {
+    fetch(`http://jsonplaceholder.typicode.com/todos/${id}`, {
       method: "PUT",
       body: JSON.stringify({
         userId: "",
@@ -53,17 +57,19 @@ export const App = () => {
       }),
     })
       .then((res) => res.json())
-      .then((json) => console.log(json));
+      .then(
+        (json) => console.log(json),
 
-    setToDos((t) =>
-      t.map((toDoItem) => {
-        if (toDoItem.id !== id) return toDoItem;
-        return {
-          ...toDoItem,
-          completed: !toDoItem.completed,
-        };
-      })
-    );
+        setToDos((t) =>
+          t.map((toDoItem) => {
+            if (toDoItem.id !== id) return toDoItem;
+            return {
+              ...toDoItem,
+              completed: !toDoItem.completed,
+            };
+          })
+        )
+      );
   };
 
   // Clear all complete toDos
@@ -75,7 +81,7 @@ export const App = () => {
   // Delete individual toDos
   const handleDelete = (id) => {
     // API use a delete method here
-    fetch("http://jsonplaceholder.typicode.com/todos{id}", {
+    fetch(`http://jsonplaceholder.typicode.com/todos/${id}`, {
       method: "DELETE",
     });
 
@@ -85,7 +91,7 @@ export const App = () => {
   //
   const handleUpdate = (id, title) => {
     // PUT method here
-    fetch("http://jsonplaceholder.typicode.com/todos{id}", {
+    fetch(`http://jsonplaceholder.typicode.com/todos/${id}`, {
       method: "PUT",
       body: JSON.stringify({
         userId: "",
@@ -94,15 +100,17 @@ export const App = () => {
       }),
     })
       .then((res) => res.json())
-      .then((json) => console.log(json));
+      .then(
+        (json) => console.log(json),
 
-    setToDos((toDoList) =>
-      toDoList.map((toDoItem) => {
-        if (toDoItem.id !== id) return toDoItem;
+        setToDos((toDoList) =>
+          toDoList.map((toDoItem) => {
+            if (toDoItem.id !== id) return toDoItem;
 
-        return { ...toDoItem, title };
-      })
-    );
+            return { ...toDoItem, title };
+          })
+        )
+      );
   };
 
   return (
