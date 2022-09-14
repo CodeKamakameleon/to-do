@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { ToDoList } from "./components/ToDo/ToDoList";
 
 // const BASE_URL = "http://jsonplaceholder.typicode.com/todos";
-// const URL = `${BASE_URL}/todos${id}`;
+// const URL = `${BASE_URL}/todos/${id}`;
 
 export const App = () => {
   const [toDos, setToDos] = useState([]);
@@ -14,8 +14,14 @@ export const App = () => {
 
   useEffect(() => {
     fetch("http://jsonplaceholder.typicode.com/todos")
-      .then((res) => res.json())
-      .then((data) => setToDos(data));
+      .then((res) => {
+        if (!res.ok) throw new Error("Something went wrong");
+        return res.json();
+      })
+      // if res.ok statement, throw new Error- watch 9/13 class video
+
+      .then((data) => setToDos(data))
+      .catch((err) => console.error(err));
   }, []);
 
   // Add To Do input
